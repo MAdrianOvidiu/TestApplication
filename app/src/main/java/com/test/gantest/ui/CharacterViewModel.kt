@@ -9,16 +9,23 @@ class CharacterViewModel(
     private val charactersUseCase: GetCharactersUseCase,
     private val charactersByNameUseCase: GetCharactersByNameUseCase
 ) : ViewModel() {
-    var characterData: MutableLiveData<List<CharacterEntity>> = MutableLiveData()
+    private val characterData: MutableLiveData<List<CharacterEntity>> = MutableLiveData()
     private val seasonQuery = MutableLiveData("")
-    var seasonsData: MutableLiveData<List<String>> = MutableLiveData()
+    private val seasonsData: MutableLiveData<List<String>> = MutableLiveData()
+
+    val filteredDataObservable: LiveData<List<CharacterEntity>>
+        get() = filteredData
+
+    val seasonsDataObservable: MutableLiveData<List<String>>
+        get() = seasonsData
+
 
     /**
      * Filtering could have been done by creating another 2 use cases,
      * charactersBySeasonUseCase and charactersByNameAndSeasonUseCase.
      * I have chosen to do it this way because I wanted to play with transformations.
      */
-    var filteredData = Transformations.switchMap(seasonQuery) { seasonQuery ->
+    private val filteredData = Transformations.switchMap(seasonQuery) { seasonQuery ->
         when {
             seasonsData.value?.contains(seasonQuery) ?: false -> filterDataBySeason(seasonQuery)
             else -> characterData
@@ -58,9 +65,9 @@ class CharacterViewModel(
         ioJob {
             seasonsData.postValue(
                 charactersUseCase.execute().map { it.seasonAppearance }
-                    ?.flatten()
-                    ?.toSortedSet()
-                    ?.filterNot { it.isNullOrBlank() }
+                    .flatten()
+                    .toSortedSet()
+                    .filterNot { it.isNullOrBlank() }
             )
         }
     }

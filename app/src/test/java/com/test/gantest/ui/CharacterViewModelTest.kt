@@ -45,13 +45,13 @@ class CharacterViewModelTest {
             )
         }
         viewModel = CharacterViewModel(getCharactersUseCase, getCharactersByNameUseCase)
-        viewModel.filteredData.observeForever {}
-        viewModel.seasonsData.observeForever {}
+        viewModel.filteredDataObservable.observeForever {}
+        viewModel.seasonsDataObservable.observeForever {}
     }
 
     @Test
     fun `filtered data initially returns all characters`() {
-        assertThat(viewModel.filteredData.value).isEqualTo(ALL_CHARACTERS)
+        assertThat(viewModel.filteredDataObservable.value).isEqualTo(ALL_CHARACTERS)
     }
 
     @Test
@@ -60,7 +60,7 @@ class CharacterViewModelTest {
         viewModel.filterBySeason("")
 
 
-        assertThat(viewModel.filteredData.value).isEqualTo(ALL_CHARACTERS)
+        assertThat(viewModel.filteredDataObservable.value).isEqualTo(ALL_CHARACTERS)
     }
 
     @Test
@@ -68,7 +68,7 @@ class CharacterViewModelTest {
         viewModel.searchByName("")
         viewModel.filterBySeason(SERIES_FILTER)
 
-        assertThat(viewModel.filteredData.value).isEqualTo(FILTERED_BY_SERIES_CHARACTERS)
+        assertThat(viewModel.filteredDataObservable.value).isEqualTo(FILTERED_BY_SERIES_CHARACTERS)
     }
 
     @Test
@@ -76,7 +76,7 @@ class CharacterViewModelTest {
         viewModel.searchByName(NAME_QUERY)
         viewModel.filterBySeason("")
 
-        assertThat(viewModel.filteredData.value).isEqualTo(SEARCH_QUERIED_BY_NAME_CHARACTERS)
+        assertThat(viewModel.filteredDataObservable.value).isEqualTo(SEARCH_QUERIED_BY_NAME_CHARACTERS)
     }
 
     @Test
@@ -84,7 +84,7 @@ class CharacterViewModelTest {
         viewModel.searchByName(NAME_QUERY)
         viewModel.filterBySeason(SERIES_FILTER)
 
-        assertThat(viewModel.filteredData.value).isEqualTo(
+        assertThat(viewModel.filteredDataObservable.value).isEqualTo(
             SEARCH_QUERIED_BY_NAME_AND_FILTERED_BY_SERIES_CHARACTERS
         )
     }

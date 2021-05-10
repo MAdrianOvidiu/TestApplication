@@ -20,7 +20,9 @@ import javax.inject.Inject
 
 class CharacterListActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: CharacterViewModel
+    private val  viewModel by lazy {
+        ViewModelProvider(this, factory).get(CharacterViewModel::class.java)
+    }
     @Inject
     lateinit var factory: CharacterVMFactory
 
@@ -29,8 +31,6 @@ class CharacterListActivity : AppCompatActivity() {
 
         (application as Injector).createCharacterSubcomponent()
             .inject(this)
-
-        viewModel = ViewModelProvider(this, factory).get(CharacterViewModel::class.java)
 
         setupDataBindingUI()
     }
@@ -52,13 +52,13 @@ class CharacterListActivity : AppCompatActivity() {
             startDetailActivity(character)
         }
         recyclerView.adapter = adapter
-        viewModel.filteredData.observe(this, {
+        viewModel.filteredDataObservable.observe(this, {
             adapter.submitList(it)
         })
     }
 
     private fun setupChipGroup(chipGroup: ChipGroup) {
-        viewModel.seasonsData.observe(this, Observer {
+        viewModel.seasonsDataObservable.observe(this, Observer {
             if (it != null) {
                 chipGroup.removeAllViews()
                 it.map { season ->

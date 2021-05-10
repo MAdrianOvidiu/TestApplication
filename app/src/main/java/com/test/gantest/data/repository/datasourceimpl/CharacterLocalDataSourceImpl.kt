@@ -18,9 +18,7 @@ class CharacterLocalDataSourceImpl(private val charactersDao: CharactersDao) :
     }
 
     override suspend fun saveCharactersToDB(characters: List<CharacterEntity>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            charactersDao.saveCharacters(characters)
-        }
+        charactersDao.saveCharacters(characters)
     }
 
     override suspend fun getCharactersByName(name: String): List<CharacterEntity> {
